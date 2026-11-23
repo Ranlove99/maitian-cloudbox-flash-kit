@@ -1,0 +1,14 @@
+【此目录为空 - ATV 固件需自行下载】
+
+必需文件：sbx_hk1_box_atv_9_12（HK1 BOX / S905X3 / 千兆）
+作用：刷进盒子板替换原厂 u-boot，解锁 U 盘启动。飞牛和 Armbian 都依赖它。
+
+下载后得到 .rar，解压出 .img，用 USB Burning Tool 导入。
+
+可用地址（同主控，社区实测可用）：
+  123pan 原版:      https://www.123pan.com/s/pxT9-T4ui3.html  提取码 hKRm
+  123pan 汉化版:    https://www.123pan.com/s/pxT9-j1ui3.html  提取码 1UZC
+  百度网盘:         https://pan.baidu.com/s/10pAIBbL_pidDHwB_BBDNlw  提取码 kfio
+  百度网盘备份:     https://pan.baidu.com/s/1f3EJYF5kftM1fkg67Pqmlw  提取码 ic6g
+
+优先试 123pan 原版，与教程实测固件最一致。
