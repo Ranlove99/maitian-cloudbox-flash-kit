@@ -1,0 +1,100 @@
+# 麦田云盒 1S Plus 刷机工具包
+
+> 本包已收齐除「飞牛系统镜像」和「Armbian 镜像」之外的所有刷机工具。
+> 那两个系统镜像按你的要求未下载，需自行获取（获取地址见文末）。
+
+---
+
+## 一、已下载完成的文件（4 个）
+
+| 文件 | 用途 | 大小 | MD5 |
+|---|---|---|---|
+| `01_线刷工具_晶晨/USB_Burning_Tool_v2.2.0.exe` | 晶晨线刷工具，刷 ATV 打底固件 | 8.1 MB | `6724214436bd49f9e94156f9b6a99880` |
+| `01_线刷工具_晶晨/UsbRomDrv_修正版.dll` | 修正烧录 97% 卡死的驱动，装完工具后替换同名文件 | 146 KB | `c72f0a1eb865c014e69766e3322eded9` |
+| `02_写盘工具/rufus-4.16p-便携版.exe` | 把系统镜像写进 U 盘，免安装 | 1.9 MB | `d7ee4de6fffb42098c657f8c771a0046` |
+| `04_SSH工具/putty-64bit.exe` | SSH 连进飞牛/Armbian，免安装 | 1.3 MB | `84ce1f85f55419d96d29283d20e4cdad` |
+
+四个文件都已校验为完整的 Windows 可执行程序，可直接用。
+
+---
+
+## 二、需你自行获取的 2 个文件
+
+这两个文件都只在网盘或反爬站点分发，无法直接下载，地址和备用方案如下。
+
+### 1. ATV 打底固件 `sbx_hk1_box_atv_9_12`（必需）
+
+**作用**：刷进盒子板，替换原厂 u-boot、解锁 U 盘启动能力。不刷这一步，飞牛和 Armbian 都起不来。
+
+**可用下载地址（均为 HK1 BOX / S905X3 / 千兆，与本盒子同主控，社区实测可用）**：
+
+| 来源 | 链接 | 提取码 |
+|---|---|---|
+| 123pan（原版） | `https://www.123pan.com/s/pxT9-T4ui3.html` | `hKRm` |
+| 123pan（当贝桌面汉化版） | `https://www.123pan.com/s/pxT9-j1ui3.html` | `1UZC` |
+| 百度网盘 | `https://pan.baidu.com/s/10pAIBbL_pidDHwB_BBDNlw` | `kfio` |
+| 百度网盘（另一备份） | `https://pan.baidu.com/s/1f3EJYF5kftM1fkg67Pqmlw` | `ic6g` |
+
+> 下载后得到的是 `.rar`，解压出 `.img` 用 USB Burning Tool 导入。
+> 优先试 123pan 的原版（与教程里实测的固件最一致）。
+
+### 2. `Reboot to LibreELEC.apk`（强烈推荐，可替代）
+
+**作用**：在安卓里点一下就重启到 U 盘系统，免拆机、免短接、免猜复位键时机。
+
+**获取方式**：把下面这行字复制到手机应用商店或浏览器搜一下就有，包名是 `me.thomastv.rebootupdate`，版本 1.1，只有 1.3 MB：
+
+```
+Reboot to LibreELEC 1.1  apk
+```
+
+- APKPure 页面：`https://apkpure.net/cn/reboot-to-libreelec/me.thomastv.rebootupdate/download`
+- 官方签名 MD5：`08859c7d54e544147bfef09e9c28f306`（下载后可核对）
+
+**完全替代方案（不装这个 APK 也能启动 U 盘）**：
+
+- 在安卓里开 USB 调试，电脑用 ADB 执行：
+  ```
+  adb shell reboot update
+  ```
+- 或者：盒子断电 → 插 U 盘 → 卡针顶住复位孔 → 上电 5 秒后松手
+- 实在不行才拆机短接（短接神器也在本方案硬件清单里，需另购，约 10 元）
+
+---
+
+## 三、未下载的两个系统镜像（按你要求跳过）
+
+| 系统 | 获取地址 | 选哪个文件 |
+|---|---|---|
+| 飞牛 FnNAS | `https://github.com/ophub/fnnas/releases` | `fnnas_amlogic_s905x3_k*.img.gz`（不带机型后缀的通用版） |
+| Armbian | `https://github.com/ophub/amlogic-s9xxx-armbian/releases` | `Armbian_*_amlogic_s905x3_*.img.gz` |
+
+GitHub 直连慢的话，在下载链接前加加速前缀：
+```
+https://gh-proxy.com/https://github.com/ophub/fnnas/releases/download/...
+```
+
+---
+
+## 四、刷机前还要准备的硬件（非下载项）
+
+- 双公头 USB-A 数据线（短、粗、带屏蔽）
+- 晶晨短接神器（HDMI 口免拆款，约 10 元）
+- U 盘 ≥ 8GB（建议 16GB，质量要好）
+- 网线 + HDMI 线 + 显示器
+- 十字螺丝刀（备用）
+
+---
+
+## 五、使用顺序速查
+
+1. 装 `USB_Burning_Tool_v2.2.0.exe`，用修正版 `UsbRomDrv.dll` 替换安装目录下的同名文件
+2. 导入 ATV 固件 → 设选项（擦除 bootloader / 覆盖 key 都别勾）→ 短接上电线刷
+3. 进安卓后装 `Reboot to LibreELEC.apk`
+4. 用 `rufus-4.16p` 把飞牛或 Armbian 镜像写进 U 盘
+5. **飞牛**：改 U 盘 `uEnv.txt` 的 `fdtfile=amlogic/meson-sm1-x96-max-plus-oc.dtb`
+   **Armbian**：改 `extlinux/extlinux.conf` 的 `FDT /dtb/amlogic/meson-sm1-x96-max-plus-oc.dtb`
+6. 点 APK 重启进 U 盘 → 按对应教程装进 eMMC
+7. 用 `putty-64bit.exe` SSH 进系统做后续配置
+
+详细步骤见同目录的两份 HTML 教程。
