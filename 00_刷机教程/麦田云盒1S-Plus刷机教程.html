@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>麦田云盒 1S Plus 刷机教程</title>
+<style>
+:root{
+  --bg:#fbf9f5;
+  --paper:#ffffff;
+  --ink:#23201b;
+  --ink-2:#58524a;
+  --ink-3:#8a8279;
+  --line:#e8e2d7;
+  --line-2:#d8d0c1;
+  --wheat:#b8892f;
+  --wheat-soft:#f3e8cf;
+  --wheat-deep:#8a6420;
+  --green:#2f6b4f;
+  --green-soft:#e6f0ea;
+  --red:#a83a32;
+  --red-soft:#f9e9e7;
+  --blue:#2c5d7c;
+  --blue-soft:#e6eef4;
+  --mono:"SFMono-Regular",ui-monospace,"JetBrains Mono",Consolas,"Liberation Mono",Menlo,monospace;
+  --sans:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Source Han Sans SC",sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-size:16px;
+  line-height:1.85;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px 100px;display:grid;grid-template-columns:230px minmax(0,1fr);gap:56px}
+
+/* ---------- 封面 ---------- */
+header.hero{
+  grid-column:1/-1;
+  padding:64px 0 44px;
+  border-bottom:1px solid var(--line);
+  margin-bottom:48px;
+  position:relative;
+}
+.eyebrow{
+  display:inline-block;
+  font-size:12px;letter-spacing:.18em;
+  color:var(--wheat-deep);
+  background:var(--wheat-soft);
+  border:1px solid #e8d5ab;
+  border-radius:3px;
+  padding:4px 10px;
+  margin-bottom:20px;
+  font-weight:600;
+}
+h1{
+  font-size:clamp(30px,4.4vw,46px);
+  line-height:1.25;
+  letter-spacing:-.02em;
+  font-weight:800;
+}
+h1 small{
+  display:block;
+  font-size:clamp(15px,1.8vw,19px);
+  font-weight:400;
+  color:var(--ink-2);
+  letter-spacing:0;
+  margin-top:14px;
+  line-height:1.7;
+}
+.meta{
+  display:flex;flex-wrap:wrap;gap:10px 26px;
+  margin-top:26px;font-size:13.5px;color:var(--ink-3);
+}
+.meta b{color:var(--ink-2);font-weight:600}
+
+/* ---------- 目录 ---------- */
+nav.toc{
+  position:sticky;top:28px;align-self:start;
+  font-size:13.5px;
+  border-left:2px solid var(--line);
+  padding-left:18px;
+}
+nav.toc .t{
+  font-size:11px;letter-spacing:.16em;color:var(--ink-3);
+  font-weight:700;margin-bottom:14px;
+}
+nav.toc a{
+  display:block;color:var(--ink-2);text-decoration:none;
+  padding:5px 0;line-height:1.5;
+  border-left:2px solid transparent;
+  margin-left:-20px;padding-left:18px;
+  transition:.15s;
+}
+nav.toc a:hover{color:var(--wheat-deep);border-left-color:var(--wheat);background:var(--wheat-soft)}
+nav.toc a.sub{padding-left:32px;font-size:12.5px;color:var(--ink-3)}
+
+/* ---------- 正文 ---------- */
+main{min-width:0}
+section{margin-bottom:56px}
+h2{
+  font-size:24px;font-weight:750;letter-spacing:-.01em;
+  padding-bottom:12px;margin-bottom:22px;
+  border-bottom:1px solid var(--line);
+  display:flex;align-items:baseline;gap:12px;
+}
+h2 .num{
+  font-family:var(--mono);font-size:13px;color:var(--wheat);
+  font-weight:600;letter-spacing:.04em;
+}
+h3{
+  font-size:17.5px;font-weight:700;margin:32px 0 14px;
+  color:var(--ink);
+}
+h3::before{
+  content:"";display:inline-block;
+  width:4px;height:15px;background:var(--wheat);
+  margin-right:10px;vertical-align:-2px;border-radius:1px;
+}
+h4{font-size:15px;font-weight:700;margin:22px 0 10px;color:var(--ink-2)}
+p{margin:12px 0;color:var(--ink-2)}
+p strong,li strong{color:var(--ink);font-weight:650}
+ul,ol{margin:12px 0 12px 22px;color:var(--ink-2)}
+li{margin:7px 0}
+li::marker{color:var(--wheat)}
+a{color:var(--wheat-deep);text-decoration:none;border-bottom:1px solid #e0cfa8}
+a:hover{background:var(--wheat-soft)}
+code{
+  font-family:var(--mono);font-size:.875em;
+  background:#f0ece2;color:#6b4c10;
+  padding:1.5px 5px;border-radius:3px;
+  border:1px solid #e5ddcb;
+  word-break:break-all;
+}
+pre{
+  background:#26231e;color:#e9e3d6;
+  padding:16px 18px;border-radius:8px;
+  overflow-x:auto;margin:14px 0;
+  font-size:13px;line-height:1.75;
+  border:1px solid #16130f;
+}
+pre code{background:none;border:none;color:inherit;padding:0;font-size:inherit}
+pre .c{color:#8d8375}
+pre .k{color:#e0b45c}
+pre .s{color:#96c08a}
+
+/* ---------- 表格 ---------- */
+.tw{overflow-x:auto;margin:18px 0;border:1px solid var(--line-2);border-radius:8px}
+table{width:100%;border-collapse:collapse;font-size:14px;background:var(--paper)}
+th{
+  background:#f4efe4;text-align:left;
+  font-weight:700;font-size:12.5px;letter-spacing:.04em;
+  color:var(--ink-2);
+  padding:11px 14px;border-bottom:1px solid var(--line-2);
+  white-space:nowrap;
+}
+td{padding:11px 14px;border-bottom:1px solid var(--line);color:var(--ink-2);vertical-align:top}
+tr:last-child td{border-bottom:none}
+td code{font-size:12.5px}
+tbody tr:hover{background:#fdfbf6}
+
+/* ---------- 提示框 ---------- */
+.box{
+  border-radius:8px;padding:16px 20px;margin:20px 0;
+  border:1px solid;font-size:14.5px;line-height:1.8;
+}
+.box .lbl{
+  display:block;font-size:11.5px;font-weight:800;
+  letter-spacing:.12em;margin-bottom:6px;
+}
+.box p{margin:6px 0;color:inherit}
+.box p:first-of-type{margin-top:0}
+.box p:last-child{margin-bottom:0}
+.box ul{margin:8px 0 0 18px;color:inherit}
+.box li::marker{color:currentColor;opacity:.5}
+.tip{background:var(--blue-soft);border-color:#c4d8e6;color:#1f4a66}
+.tip .lbl{color:var(--blue)}
+.warn{background:var(--red-soft);border-color:#eecac5;color:#7d2b25}
+.warn .lbl{color:var(--red)}
+.note{background:var(--wheat-soft);border-color:#e6d3ab;color:#6b4c10}
+.note .lbl{color:var(--wheat-deep)}
+.ok{background:var(--green-soft);border-color:#c6ddcf;color:#1d4a37}
+.ok .lbl{color:var(--green)}
+
+/* ---------- 步骤 ---------- */
+.step{
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:22px 24px 24px;
+  margin:20px 0;
+  position:relative;
+  box-shadow:0 1px 2px rgba(35,32,27,.03);
+}
+.step-h{
+  display:flex;align-items:center;gap:12px;
+  margin-bottom:14px;
+}
+.step-n{
+  flex:none;
+  width:28px;height:28px;border-radius:50%;
+  background:var(--wheat);color:#fff;
+  font-family:var(--mono);font-size:13px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+}
+.step-h h4{margin:0;font-size:16px;color:var(--ink);font-weight:700}
+.step > p:first-of-type{margin-top:0}
+
+/* 路线卡 */
+.routes{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:22px 0}
+.route{
+  border:1px solid var(--line-2);border-radius:10px;
+  padding:20px;background:var(--paper);
+}
+.route .tag{
+  font-size:11px;font-weight:800;letter-spacing:.1em;
+  color:var(--wheat-deep);background:var(--wheat-soft);
+  padding:2px 8px;border-radius:3px;display:inline-block;margin-bottom:10px;
+}
+.route h4{margin:0 0 8px;font-size:16px}
+.route p{font-size:14px;margin:6px 0}
+
+/* 框图 */
+.arch{
+  background:var(--paper);border:1px solid var(--line-2);
+  border-radius:10px;padding:22px;margin:20px 0;
+  font-size:14px;
+}
+.arch .row{display:flex;gap:14px;align-items:stretch;margin-bottom:12px;flex-wrap:wrap}
+.arch .blk{
+  flex:1;min-width:200px;
+  border:1px solid var(--line);
+  border-left:3px solid var(--wheat);
+  border-radius:6px;padding:12px 14px;background:#fdfbf6;
+}
+.arch .blk.dark{border-left-color:#5b6b7a;background:#f7f8f9}
+.arch .blk .n{font-size:11px;letter-spacing:.1em;color:var(--ink-3);font-weight:700}
+.arch .blk .v{font-weight:650;color:var(--ink);margin-top:3px}
+
+footer{
+  grid-column:1/-1;
+  border-top:1px solid var(--line);
+  padding:32px 0 0;margin-top:32px;
+  font-size:13px;color:var(--ink-3);line-height:1.9;
+}
+@media(max-width:900px){
+  .wrap{grid-template-columns:1fr;gap:0;padding:0 18px 60px}
+  nav.toc{position:static;display:none}
+  header.hero{padding:40px 0 32px;margin-bottom:32px}
+  .routes{grid-template-columns:1fr}
+  h2{font-size:21px}
+}
+@media print{
+  body{background:#fff;font-size:11pt}
+  nav.toc{display:none}
+  .wrap{display:block;max-width:none;padding:0}
+  .step,.box,table{break-inside:avoid}
+  h2,h3{break-after:avoid}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <span class="eyebrow">硬件折腾 · 刷机指南</span>
+  <h1>麦田云盒 1S Plus 刷机教程
+    <small>一台机器、两块独立主板：上半身是 MT7621 的 OpenWrt 路由，下半身是 S905X3 的安卓盒子。<br>先想清楚你要刷哪一半，再动手。</small>
+  </h1>
+  <div class="meta">
+    <span><b>芯片</b> Amlogic S905X3 / MT7621</span>
+    <span><b>配置</b> 4GB DDR4 + 128GB eMMC</span>
+    <span><b>目标系统</b> Armbian / Android TV / OpenWrt</span>
+    <span><b>难度</b> 中等（需拆短接）</span>
+  </div>
+</header>
+
+<nav class="toc">
+  <div class="t">目录</div>
+  <a href="#c0">0 · 先搞清楚这台机器</a>
+  <a href="#c1">1 · 选哪条路线</a>
+  <a href="#c2">2 · 准备清单</a>
+  <a href="#c3">3 · 线刷安卓 ATV 打底</a>
+  <a href="#c4">4 · 写 Armbian 到 U 盘</a>
+  <a href="#c5">5 · 从 U 盘启动</a>
+  <a href="#c6">6 · 装进 eMMC</a>
+  <a href="#c7">7 · 刷完必做的配置</a>
+  <a href="#c8">8 · 路由那一半</a>
+  <a href="#c9">9 · 故障排查</a>
+  <a href="#c10">10 · 风险与底线</a>
+</nav>
+
+<main>
+
+<!-- ============ 0 ============ -->
+<section id="c0">
+  <h2><span class="num">00</span>先搞清楚这台机器是什么</h2>
+
+  <p>麦田云盒 1S Plus 不是普通电视盒子，它是<strong>两块完全独立的板子塞进一个白色圆柱壳</strong>里，共用一个电源。这个设计决定了刷机时的所有坑：</p>
+
+  <div class="arch">
+    <div class="row">
+      <div class="blk">
+        <div class="n">上半部分 · 路由板</div>
+        <div class="v">MT7621 + 128MB DDR3</div>
+        <div style="font-size:13px;color:var(--ink-2);margin-top:6px">OpenWrt 系统 · WiFi 6 · 866Mbps<br>3 个千兆网口（1 WAN + 2 LAN）</div>
+      </div>
+      <div class="blk dark">
+        <div class="n">下半部分 · 盒子板</div>
+        <div class="v">Amlogic S905X3 · 4 核 A55 @2.0GHz</div>
+        <div style="font-size:13px;color:var(--ink-2);margin-top:6px">4GB DDR4 + 128GB eMMC · Android TV<br>HDMI / USB 3.0 / USB 2.0 / 复位孔</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="box warn">
+    <span class="lbl">最容易踩的坑</span>
+    <p><strong>盒子板没有独立无线网卡。</strong>它的网络是在机箱内部接到路由板 LAN 口的。所以你给盒子板刷了 Armbian 之后，<strong>不要指望它能连 Wi-Fi</strong>，必须靠网线（接路由板，或直接接上级路由器）。</p>
+  </div>
+
+  <p>换句话说，这两块板的命运是绑在一起的：路由板挂了，盒子板就没网；反过来盒子板刷死，路由板照常工作。刷机时<strong>只动你要动的那个</strong>，别一把梭。</p>
+</section>
+
+<!-- ============ 1 ============ -->
+<section id="c1">
+  <h2><span class="num">01</span>选哪条路线</h2>
+
+  <div class="routes">
+    <div class="route">
+      <span class="tag">路线 A · 主流玩法</span>
+      <h4>盒子板 → Armbian</h4>
+      <p>把安卓换成 Debian 底子的 Linux，当轻量 NAS、下载机、Docker 小主机、内网服务节点。128GB eMMC 是最大价值所在。</p>
+      <p style="color:var(--ink-3);font-size:13px">社区已有实测：S905X3 平台跑 Armbian 26.02 trixie + 内核 6.18，连续稳定运行一个月以上。</p>
+    </div>
+    <div class="route">
+      <span class="tag">路线 B · 轻度</span>
+      <h4>盒子板 → 纯净 Android TV</h4>
+      <p>只想当电视盒子用，受不了原厂那套 PCDN / 广告系统。刷 slimBOXtv 系 ATV 固件，界面干净、能装第三方 App。</p>
+      <p style="color:var(--ink-3);font-size:13px">其实这就是路线 A 的<strong>前置步骤</strong>：刷完 ATV 停下，就是路线 B。</p>
+    </div>
+  </div>
+
+  <div class="box note">
+    <span class="lbl">重要顺序</span>
+    <p>不管你最终要 Armbian 还是 ATV，<strong>第一步都是先线刷安卓 ATV 固件</strong>。原厂固件锁了引导，直接插 U 盘是起不来的；刷入第三方 ATV 之后，它的 u-boot 才支持从 U 盘引导，Armbian 才能跑起来。</p>
+  </div>
+
+  <p>路由板的 OpenWrt 出厂就是原厂定制版，日常用不需要刷，第 8 节单独说。</p>
+</section>
+
+<!-- ============ 2 ============ -->
+<section id="c2">
+  <h2><span class="num">02</span>准备清单</h2>
+
+  <h3>硬件</h3>
+  <div class="tw">
+  <table>
+    <thead><tr><th>物品</th><th>规格要求</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>Windows 电脑</td><td>Win 10 / 11</td><td>线刷工具只有 Windows 版；Mac / Linux 建议装虚拟机</td></tr>
+      <tr><td>双公头 USB 线</td><td>USB-A 对 USB-A，<strong>短、粗、带屏蔽</strong></td><td>别用手机充电线凑合，这是烧录失败的头号原因</td></tr>
+      <tr><td>晶晨短接神器</td><td>HDMI 口免拆款，约 10 元</td><td>插 HDMI 口短接 eMMC 数据脚，免拆机进 MaskROM</td></tr>
+      <tr><td>U 盘</td><td>≥ 8GB（建议 16GB），USB 2.0 更稳</td><td>会被全部清空</td></tr>
+      <tr><td>网线 + HDMI 线 + 显示器</td><td>—</td><td>Armbian 首次启动要看屏幕、要走有线网</td></tr>
+      <tr><td>十字螺丝刀</td><td>备用</td><td>短接神器不管用时要拆机找焊盘</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>软件与固件</h3>
+  <div class="tw">
+  <table>
+    <thead><tr><th>名称</th><th>用途</th><th>获取方式</th></tr></thead>
+    <tbody>
+      <tr><td>Amlogic USB Burning Tool</td><td>线刷烧录工具，v2.2.0 及以上</td><td>晶晨官方工具，各大盒子论坛均有分发</td></tr>
+      <tr><td>ATV 固件 <code>sbx_hk1_box_atv_9_12</code></td><td>打底用的安卓 TV 固件（slimBOXtv 系，适配 HK1 Box / S905X3 / 4G）</td><td>社区分享，恩山论坛相关帖子内</td></tr>
+      <tr><td>Armbian 镜像</td><td>ophub 构建的 <code>s905x3</code> 分支，名字形如 <code>Armbian_26.02.0_amlogic_s905x3_trixie_*.img.gz</code></td><td><a href="https://github.com/ophub/amlogic-s9xxx-armbian/releases" target="_blank" rel="noopener">github.com/ophub/amlogic-s9xxx-armbian/releases</a></td></tr>
+      <tr><td>Rufus / balenaEtcher</td><td>把镜像写进 U 盘</td><td><a href="https://rufus.ie" target="_blank" rel="noopener">rufus.ie</a></td></tr>
+      <tr><td>Reboot to LibreELEC.apk</td><td>在安卓里一键重启到 U 盘系统</td><td>社区 APK，最省事的引导方式</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="box warn">
+    <span class="lbl">动手前</span>
+    <p>128GB eMMC 里如果有你还要的数据（原厂 App、PCDN 缓存、录的视频），<strong>先拷走</strong>。刷完之后原厂系统不可恢复——原厂固件本身没有被公开分享过，救不回来。</p>
+  </div>
+</section>
+
+<!-- ============ 3 ============ -->
+<section id="c3">
+  <h2><span class="num">03</span>线刷安卓 ATV 打底</h2>
+
+  <p>这一步的目标不是"用安卓"，而是<strong>换掉原厂 u-boot，解锁 U 盘启动能力</strong>。刷完你就有了一个干净可用的 ATV 系统，也是后面所有操作的跳板。</p>
+
+  <div class="step">
+    <div class="step-h"><span class="step-n">1</span><h4>装工具、装驱动</h4></div>
+    <p>安装 Amlogic USB Burning Tool。Win 10 / 11 第一次打开会提示驱动安装，<strong>必须点"是"允许</strong>；如果安装时报驱动签名错误，先临时禁用"驱动程序签名强制"再装。</p>
+  </div>
+
+  <div class="step">
+    <div class="step-h"><span class="step-n">2</span><h4>导入固件并设置选项</h4></div>
+    <p>菜单「文件 → 导入烧录包」选择 ATV 的 <code>.img</code>，等待校验完成。然后<strong>严格按下表设置</strong>：</p>
+    <div class="tw">
+    <table>
+      <thead><tr><th>选项</th><th>设置</th><th>原因</th></tr></thead>
+      <tbody>
+        <tr><td>擦除 flash</td><td>普通擦除（勾选）</td><td>清掉原厂分区表，必须</td></tr>
+        <tr><td>擦除 bootloader</td><td><strong>不勾</strong></td><td>勾了极易变砖</td></tr>
+        <tr><td>覆盖 key</td><td><strong>不勾</strong></td><td>会清掉 MAC / 序列号等唯一信息</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-h"><span class="step-n">3</span><h4>进入 MaskROM：短接 + 上电</h4></div>
+    <p>按顺序操作，顺序错了识别不到设备：</p>
+    <ol>
+      <li>盒子<strong>断电</strong>（拔电源）</li>
+      <li>短接神器插进盒子 HDMI 口</li>
+      <li>双公头 USB 线一头接电脑（<strong>插机箱后置 USB 口</strong>，供电更稳），一头接盒子的 <strong>USB 2.0 口</strong>（靠近 HDMI 那个）</li>
+      <li>给盒子上电</li>
+      <li>烧录工具提示「连接成功」后，<strong>立即拔掉短接神器</strong></li>
+    </ol>
+  </div>
+
+  <div class="step">
+    <div class="step-h"><span class="step-n">4</span><h4>开始烧录</h4></div>
+    <p>点「开始」，进度条走完（约 3–8 分钟），提示 <code>Success</code> 后点「停止」、拔线、接 HDMI 通电。首次开机较慢，等 2–5 分钟进系统。</p>
+  </div>
+
+  <div class="box ok">
+    <span class="lbl">阶段成果</span>
+    <p>到这里，如果你<strong>只想当电视盒子</strong>，已经可以收工了：装个当贝 / Emotn 桌面，收工。要继续上 Armbian，往下走。</p>
+  </div>
+</section>
+
+<!-- ============ 4 ============ -->
+<section id="c4">
+  <h2><span class="num">04</span>写 Armbian 到 U 盘</h2>
+
+  <div class="step">
+    <div class="step-h"><span class="step-n">1</span><h4>选对镜像</h4></div>
+    <p>到 ophub 的 Releases 页面，找文件名里带 <code>amlogic_s905x3</code> 的镜像，后缀 <code>.img.gz</code>。不要选 <code>s905x2</code> / <code>s905l3a</code>，那些是别的芯片，dtb 完全不匹配。</p>
+    <p>Debian 版本建议 <strong>bookworm</strong>（trixie 在新设备上偶有兼容小问题；不过实测帖里用的就是 trixie，能跑）。带 <code>server</code> 的是无桌面版，占空间小，推荐。</p>
+  </div>
+
+  <div class="step">
+    <div class="step-h"><span class="step-n">2</span><h4>用 Rufus / balenaEtcher 写入</h4></div>
+    <p>选 U 盘 → 选镜像 → 开始。写完 Windows 会弹「需要格式化」的提示，<strong>点取消</strong>，那是 Linux 分区，Windows 读不懂很正常。</p>
+  </div>
+
+  <div class="step">
+    <div class="step-h"><span class="step-n">3</span><h4>改 dtb（关键一步）</h4></div>
+    <p>U 盘里有个 FAT32 的 <code>BOOT</code> 分区，Windows 能直接打开。进去找到 <code>extlinux/extlinux.conf</code>，用记事本打开，找到 <code>FDT</code> 那一行：</p>
+<pre><code><span class="c"># 改之前（默认，对应百兆网口的 X96-Air，网口会不通）</span>
+FDT /dtb/amlogic/meson-sm1-x96-air.dtb
+
+<span class="c"># 改之后（4GB 内存 + 千兆网口，实测稳定）</span>
+FDT /dtb/amlogic/meson-sm1-x96-max-plus-oc.dtb</code></pre>
+    <p>不想手改也行——先按默认启动，进系统后用 <code>armbian-install</code> 选 dtb，一样能成。但如果启动后有线网口不通，就回来改这里。</p>
+  </div>
+
+  <div class="box note">
+    <span class="lbl">为什么是 x96-max-plus</span>
+    <p>S905X3 + 4GB 内存 + 千兆网口的硬件组合，最接近的公版设计就是 X96 Max+。带 <code>-oc</code> 后缀是超频版 dtb（CPU 主频放得更开），4G 内存机型用它最合适。备选：<code>meson-sm1-x96-max-plus.dtb</code>（不超频）、<code>meson-sm1-hk1box-vontar-x3-oc.dtb</code>。</p>
+  </div>
+</section>
+
+<!-- ============ 5 ============ -->
+<section id="c5">
+  <h2><span class="num">05</span>从 U 盘启动</h2>
+
+  <p>四种方式，从上到下按省事程度排。第一种成功率高且不用拆机，优先试。</p>
+
+  <h3>方式一：APK 一键重启（推荐）</h3>
+  <p>在 ATV 系统里装 <code>Reboot to LibreELEC.apk</code>，插上写好系统的 U 盘，打开这个 App，弹窗点「OK」，盒子重启后直接进 U 盘里的 Armbian。</p>
+
+  <h3>方式二：复位孔</h3>
+  <p>盒子断电 → 插 U 盘 → 用卡针顶住机身背面的复位小孔不放 → 上电 → 保持 5 秒左右再松手。</p>
+
+  <h3>方式三：ADB 命令</h3>
+  <p>ATV 里开启 USB 调试 / 网络调试，电脑上执行：</p>
+<pre><code>adb connect 192.168.x.x
+adb shell reboot update</code></pre>
+
+  <h3>方式四：拆机短接</h3>
+  <p>前三种都不行才用这招。拆开底盖，找到 eMMC 颗粒附近标注 <code>SW</code> / <code>KEY</code> 的两个焊盘（或直接短接 eMMC 任意两个数据脚），镊子夹住保持短接，同时上电。</p>
+
+  <div class="box tip">
+    <span class="lbl">看到什么算成功</span>
+    <p>HDMI 接上显示器，屏幕滚过一堆启动日志，最后停在 <code>armbian login:</code> 提示符——这就对了。<strong>此时系统还跑在 U 盘上，eMMC 里的东西一个字节都没动。</strong></p>
+  </div>
+</section>
+
+<!-- ============ 6 ============ -->
+<section id="c6">
+  <h2><span class="num">06</span>装进 eMMC</h2>
+
+  <div class="step">
+    <div class="step-h"><span class="step-n">1</span><h4>登录</h4></div>
+    <p>账号 <code>root</code>，密码 <code>1234</code>。首次登录会强制改密码，然后问你要不要创建普通用户——<strong>按 Ctrl+C 跳过</strong>，直接用 root 最省事。</p>
+  </div>
+
+  <div class="step">
+    <div class="step-h"><span class="step-n">2</span><h4>先确认能上网</h4></div>
+    <p>网线接上（接路由板 LAN 口，或直接接你家路由器），执行：</p>
+<pre><code>ip a
+ping -c 3 baidu.com</code></pre>
+    <p>拿到 IP 且能 ping 通再往下走。不通就 <code>nmtui</code> 手动配。建议这一步就把 IP 记下来，之后 SSH 用它。</p>
+  </div>
+
+  <div class="step">
+    <div class="step-h"><span class="step-n">3</span><h4>运行安装脚本</h4></div>
+<pre><code>armbian-install</code></pre>
+    <p>脚本会列出设备列表（ID / SOC / MODEL / DTB 四列）。<strong>别死记 ID 数字，按机型名找</strong>，因为 ID 会随版本变动。在 S905X3 段里找：</p>
+    <div class="tw">
+    <table>
+      <thead><tr><th>MODEL</th><th>DTB</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td>X96-Max+ (OverClock)</td><td><code>meson-sm1-x96-max-plus-oc.dtb</code></td><td><strong>首选</strong>，实测稳定一个月</td></tr>
+        <tr><td>X96-Max+</td><td><code>meson-sm1-x96-max-plus.dtb</code></td><td>不超频，更保守</td></tr>
+        <tr><td>HK1-Box (OverClock)</td><td><code>meson-sm1-hk1box-vontar-x3-oc.dtb</code></td><td>备选，与 ATV 固件同源</td></tr>
+        <tr><td>X96-Max+ 100Mb</td><td><code>meson-sm1-x96-air.dtb</code></td><td><strong>别选</strong>，只有百兆网口</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p>接着选文件系统：<strong>1 = ext4</strong>（推荐，稳、兼容好）；2 = btrfs（要快照才用）。</p>
+  </div>
+
+  <div class="step">
+    <div class="step-h"><span class="step-n">4</span><h4>等待 → 关机 → 拔 U 盘 → 重启</h4></div>
+    <p>屏幕会滚过写 bootloader、重建分区表、格式化 BOOTFS / ROOTFS 的日志，约 2–5 分钟。看到 <code>Installation successful</code> 后执行：</p>
+<pre><code>poweroff</code></pre>
+    <p>拔掉 U 盘，重新上电。这次系统从 eMMC 启动，128GB 全部归你。</p>
+  </div>
+
+  <div class="box ok">
+    <span class="lbl">验收</span>
+    <p>重新登录后跑 <code>df -h</code> 看根分区，应该是 100GB 以上；<code>htop</code> 能看到 4 核 A55、约 3.6GB 可用内存；<code>uname -a</code> 内核带 <code>-ophub</code> 后缀。都对就说明装好了。</p>
+  </div>
+</section>
+
+<!-- ============ 7 ============ -->
+<section id="c7">
+  <h2><span class="num">07</span>刷完必做的配置</h2>
+
+  <h3>换国内源（不换下载慢到怀疑人生）</h3>
+<pre><code>armbian-apt      <span class="c"># 按提示选清华 / 腾讯源，自动改 sources.list</span>
+apt update</code></pre>
+
+  <h3>装软件</h3>
+<pre><code>armbian-software          <span class="c"># 软件中心，一键装 Docker / 1Panel / CasaOS 等</span>
+armbian-software -u       <span class="c"># 先更新一次软件列表</span></code></pre>
+
+  <h3>加虚拟内存</h3>
+  <p>4GB 内存跑 Docker 有时吃紧，用 eMMC 空间换 swap（参数单位 GB）：</p>
+<pre><code>armbian-swap 2</code></pre>
+
+  <h3>固定 IP</h3>
+  <p>盒子板没有 Wi-Fi，IP 靠路由板 DHCP 分配，重启可能变。两种做法：登录路由板后台做 DHCP 静态绑定，或在 Armbian 里写死：</p>
+<pre><code>nmtui      <span class="c"># 图形化改 IPv4 为 Manual，填 IP / 掩码 / 网关 / DNS</span></code></pre>
+
+  <h3>顺手优化</h3>
+<pre><code><span class="c"># eMMC 定期 TRIM，延长寿命</span>
+fstrim -av
+echo -e '#!/bin/bash\nfstrim -av' &gt; /etc/cron.weekly/fstrim
+chmod +x /etc/cron.weekly/fstrim
+
+<span class="c"># 关掉用不到的服务，省内存</span>
+systemctl disable --now bluetooth ModemManager avahi-daemon</code></pre>
+
+  <div class="box tip">
+    <span class="lbl">LED 屏 / 面板显示</span>
+    <p>如果机身前面板有小显示屏不亮，跑 <code>armbian-openvfd</code> 按提示调；不同批次的面板驱动不一样，调不出来也不影响系统。</p>
+  </div>
+</section>
+
+<!-- ============ 8 ============ -->
+<section id="c8">
+  <h2><span class="num">08</span>路由那一半（MT7621）</h2>
+
+  <p>路由板出厂跑的就是 <strong>OpenWrt</strong>，只不过管理界面被换成了厂商定制页。绝大多数人不需要重刷，改改就行。</p>
+
+  <h3>先登进去看看</h3>
+  <div class="tw">
+  <table>
+    <thead><tr><th>项目</th><th>值</th></tr></thead>
+    <tbody>
+      <tr><td>管理地址</td><td><code>http://192.168.5.1/cgi-bin/luci/</code></td></tr>
+      <tr><td>默认账号</td><td><code>admin</code></td></tr>
+      <tr><td>默认密码</td><td><code>123456</code></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>拿 root 权限</h3>
+  <p>社区帖里给出的路径是：<strong>进原厂系统的安全模式 → 修改 root 密码 → 拿到 root</strong>，然后可以删掉厂商页面、装官方 LuCI。拿到 SSH 之后：</p>
+<pre><code>ssh root@192.168.5.1
+<span class="c"># 登录后可以装官方 LuCI 主题，或直接用 uci 改配置</span>
+opkg update</code></pre>
+
+  <div class="box warn">
+    <span class="lbl">想彻底换固件？先想清楚</span>
+    <p>路由板的固件不是普通软刷能搞定的——帖子里提到，<strong>原厂 root 后的固件需要用编程器刷入</strong>（CH341A + 夹子直接读写 Flash 芯片）。这意味着：拆机、夹芯片、备份原固件、刷写，全程没有回滚按钮。<strong>而且路由板刷坏，盒子板就彻底断网了。</strong>除非你有编程器和明确的目标固件，否则别动。</p>
+  </div>
+</section>
+
+<!-- ============ 9 ============ -->
+<section id="c9">
+  <h2><span class="num">09</span>故障排查</h2>
+
+  <h3>烧录阶段</h3>
+  <div class="tw">
+  <table>
+    <thead><tr><th>现象</th><th>原因</th><th>处理</th></tr></thead>
+    <tbody>
+      <tr><td>工具一直显示不到设备</td><td>驱动没装 / 短接没保持 / USB 线是充电线</td><td>卸了重装驱动并禁用签名强制；确认短接神器插到位；换线</td></tr>
+      <tr><td>进度条卡在 2%</td><td>DDR 初始化失败：短接松早了或点位不对</td><td>重新来一遍，工具认到设备后再拔短接神器</td></tr>
+      <tr><td><code>[0x10105002]</code></td><td>USB 通信错误，线太差或口供电不足</td><td>换短粗线，插机箱后置 USB 口</td></tr>
+      <tr><td><code>[0x00101004]</code></td><td>固件和芯片不匹配</td><td>确认下的是 S905X3 的包，不是 s905x2 / s905w</td></tr>
+      <tr><td><code>[0x30402004]</code></td><td>eMMC 坏块或供电不稳</td><td>换 USB 口；用带外接电源的 HUB</td></tr>
+      <tr><td>提示高安校验失败</td><td>缺安全启动证书</td><td>把 <code>SECURE_BOOT_SET</code> 放进工具的 <code>license</code> 目录</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>Armbian 启动阶段</h3>
+  <div class="tw">
+  <table>
+    <thead><tr><th>现象</th><th>原因</th><th>处理</th></tr></thead>
+    <tbody>
+      <tr><td>插 U 盘启动无反应，还是进安卓</td><td>没触发 U 盘引导</td><td>换方式一（APK）；或改用复位孔 / 短接</td></tr>
+      <tr><td>有日志但黑屏 / 卡住</td><td>dtb 不对</td><td>改 <code>extlinux.conf</code> 的 FDT 为 <code>meson-sm1-x96-max-plus-oc.dtb</code></td></tr>
+      <tr><td>起来了但网口不亮</td><td>用了百兆 dtb（<code>x96-air</code>）</td><td>换 <code>x96-max-plus</code> 系列 dtb</td></tr>
+      <tr><td>网口只跑百兆</td><td>同上</td><td>换 <code>-oc</code> 或 <code>x96-max-plus</code></td></tr>
+      <tr><td>找不到 IP</td><td>没接网线 / DHCP 没给地址</td><td><code>nmtui</code> 手动配；网线直连上级路由试</td></tr>
+      <tr><td>装 eMMC 时报分区错误</td><td>原厂分区表残留</td><td>加参数 <code>armbian-install -a yes</code> 强制用 ampart 重整分区</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>变砖了怎么办</h3>
+  <p>黑屏、卡 logo、指示灯不亮——大概率是软砖，能救：</p>
+  <ol>
+    <li><strong>短接神器 + 烧录工具强刷</strong>：重新走第 3 节的 MaskROM 流程，把 ATV 固件再烧一遍，90% 的软砖都能回来</li>
+    <li><strong>断电大法</strong>：拔电源放五分钟再上电，个别偶发故障能自己缓过来</li>
+    <li><strong>换 dtb 重来</strong>：U 盘阶段起不来，多半只是 dtb 选错，eMMC 里的东西没坏</li>
+  </ol>
+  <p>真正救不回来的是<strong>刷错芯片型号的固件</strong>（比如把 s905w 的包刷进 s905x3），那会写坏 bootloader，只能上编程器。</p>
+</section>
+
+<!-- ============ 10 ============ -->
+<section id="c10">
+  <h2><span class="num">10</span>风险与底线</h2>
+
+  <div class="box warn">
+    <span class="lbl">动手前请确认你能接受</span>
+    <ul>
+      <li><strong>短接有硬件风险。</strong>镊子滑到旁边的元件上，可能直接送走 eMMC 或 SoC。第一次建议用免拆短接神器，别用镊子硬怼。</li>
+      <li><strong>原厂系统不可恢复。</strong>原厂固件没有公开，128GB eMMC 里的原厂安卓 + PCDN 数据刷掉就没了。</li>
+      <li><strong>刷机即失去保修。</strong>拆机痕迹、封条破损都算。</li>
+      <li><strong>两块板互相牵连。</strong>路由板刷坏 → 盒子板断网；盒子板刷坏 → 路由板照常，但盒子变砖。</li>
+      <li><strong>中途绝对不能断电。</strong>烧录过程中拔线或停电，基本直接变砖。</li>
+    </ul>
+  </div>
+
+  <h3>一句话总结流程</h3>
+  <p style="font-size:15.5px;line-height:2;color:var(--ink)">
+    短接进 MaskROM → 线刷 ATV 解锁引导 → 写 Armbian 到 U 盘并改 dtb →<br>
+    APK 重启进 U 盘 → <code>armbian-install</code> 选 <code>x96-max-plus-oc</code> + ext4 →<br>
+    <code>poweroff</code> 拔盘重启 → 换源、装 Docker、固定 IP。
+  </p>
+
+  <h3>还能刷什么</h3>
+  <p>同一套"先刷 ATV 打底、再 U 盘引导装系统"的流程，S905X3 平台还能跑：</p>
+  <ul>
+    <li><strong>FnNAS（飞牛）</strong> — 想要图形化 NAS 界面，比纯 Armbian 友好</li>
+    <li><strong>OpenWrt（盒子版）</strong> — 把盒子板当软路由 / 旁路由</li>
+    <li><strong>LibreELEC / CoreELEC</strong> — 只做 4K 播放机，硬解最完整</li>
+    <li><strong>EmuELEC</strong> — 复古游戏机，S905X3 性能绰绰有余</li>
+  </ul>
+  <p>换系统只需重写 U 盘，不用再动 bootloader，比第一次刷轻松得多。</p>
+</section>
+
+</main>
+
+<footer>
+  <p><strong>资料来源</strong>：恩山无线论坛《麦田云盒 1s plus 刷 armbian》实测帖（S905X3 / 4+128 / Armbian 26.02 trixie / dtb <code>meson-sm1-x96-max-plus-oc</code> / 稳定运行一个月）；OPHUB <code>amlogic-s9xxx-armbian</code> 官方文档与设备列表；什么值得买 / 今日头条拆机与硬件规格文章。</p>
+  <p style="margin-top:10px">本教程为社区经验整理，非官方文档。硬件批次、固件版本存在差异，操作前请确认自己机器的实际配置。刷机风险自负。</p>
+</footer>
+
+</div>
+</body>
+</html>
