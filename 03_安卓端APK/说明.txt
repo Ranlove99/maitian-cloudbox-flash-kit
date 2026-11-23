@@ -1,0 +1,12 @@
+【此目录为空 - APK 需自行下载】
+
+Reboot to LibreELEC.apk（1.3MB）
+作用：在安卓里点一下重启到 U 盘系统，免拆机免短接。
+
+获取：应用商店或浏览器搜索 "Reboot to LibreELEC"，包名 me.thomastv.rebootupdate，版本 1.1
+官方签名 MD5：08859c7d54e544147bfef09e9c28f306
+
+不装也能启动 U 盘的替代方案：
+1) ADB：adb shell reboot update
+2) 复位孔：断电插 U 盘，卡针顶住复位孔上电 5 秒松开
+3) 拆机短接（短接神器需另购，约 10 元）
