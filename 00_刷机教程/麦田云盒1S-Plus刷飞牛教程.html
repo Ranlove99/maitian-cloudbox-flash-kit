@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>麦田云盒 1S Plus 刷飞牛 fnOS（FnNAS）教程</title>
+<style>
+:root{
+  --bg:#f8faf9;
+  --paper:#ffffff;
+  --ink:#1d2523;
+  --ink-2:#4f5b58;
+  --ink-3:#838f8b;
+  --line:#e2e9e6;
+  --line-2:#cdd9d5;
+  --teal:#1a7f74;
+  --teal-soft:#e2f1ee;
+  --teal-deep:#0f5a52;
+  --green:#2f6b4f;
+  --green-soft:#e6f0ea;
+  --red:#a83a32;
+  --red-soft:#f9e9e7;
+  --amber:#8a6420;
+  --amber-soft:#f7eed8;
+  --mono:"SFMono-Regular",ui-monospace,"JetBrains Mono",Consolas,"Liberation Mono",Menlo,monospace;
+  --sans:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Source Han Sans SC",sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.85;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px 100px;display:grid;grid-template-columns:230px minmax(0,1fr);gap:56px}
+
+header.hero{grid-column:1/-1;padding:64px 0 44px;border-bottom:1px solid var(--line);margin-bottom:48px}
+.eyebrow{display:inline-block;font-size:12px;letter-spacing:.18em;color:var(--teal-deep);background:var(--teal-soft);border:1px solid #c3e0db;border-radius:3px;padding:4px 10px;margin-bottom:20px;font-weight:600}
+h1{font-size:clamp(30px,4.4vw,46px);line-height:1.25;letter-spacing:-.02em;font-weight:800}
+h1 small{display:block;font-size:clamp(15px,1.8vw,19px);font-weight:400;color:var(--ink-2);letter-spacing:0;margin-top:14px;line-height:1.7}
+.meta{display:flex;flex-wrap:wrap;gap:10px 26px;margin-top:26px;font-size:13.5px;color:var(--ink-3)}
+.meta b{color:var(--ink-2);font-weight:600}
+
+nav.toc{position:sticky;top:28px;align-self:start;font-size:13.5px;border-left:2px solid var(--line);padding-left:18px}
+nav.toc .t{font-size:11px;letter-spacing:.16em;color:var(--ink-3);font-weight:700;margin-bottom:14px}
+nav.toc a{display:block;color:var(--ink-2);text-decoration:none;padding:5px 0;line-height:1.5;border-left:2px solid transparent;margin-left:-20px;padding-left:18px;transition:.15s}
+nav.toc a:hover{color:var(--teal-deep);border-left-color:var(--teal);background:var(--teal-soft)}
+
+main{min-width:0}
+section{margin-bottom:56px}
+h2{font-size:24px;font-weight:750;letter-spacing:-.01em;padding-bottom:12px;margin-bottom:22px;border-bottom:1px solid var(--line);display:flex;align-items:baseline;gap:12px}
+h2 .num{font-family:var(--mono);font-size:13px;color:var(--teal);font-weight:600;letter-spacing:.04em}
+h3{font-size:17.5px;font-weight:700;margin:32px 0 14px;color:var(--ink)}
+h3::before{content:"";display:inline-block;width:4px;height:15px;background:var(--teal);margin-right:10px;vertical-align:-2px;border-radius:1px}
+h4{font-size:15px;font-weight:700;margin:22px 0 10px;color:var(--ink-2)}
+p{margin:12px 0;color:var(--ink-2)}
+p strong,li strong{color:var(--ink);font-weight:650}
+ul,ol{margin:12px 0 12px 22px;color:var(--ink-2)}
+li{margin:7px 0}
+li::marker{color:var(--teal)}
+a{color:var(--teal-deep);text-decoration:none;border-bottom:1px solid #bcdcd7}
+a:hover{background:var(--teal-soft)}
+code{font-family:var(--mono);font-size:.875em;background:#edf2f0;color:#0d5a52;padding:1.5px 5px;border-radius:3px;border:1px solid #d8e4e0;word-break:break-all}
+pre{background:#1c2422;color:#e4ece9;padding:16px 18px;border-radius:8px;overflow-x:auto;margin:14px 0;font-size:13px;line-height:1.75;border:1px solid #101614}
+pre code{background:none;border:none;color:inherit;padding:0;font-size:inherit}
+pre .c{color:#7d8b87}
+pre .k{color:#6fc8b8}
+pre .s{color:#a8c98a}
+
+.tw{overflow-x:auto;margin:18px 0;border:1px solid var(--line-2);border-radius:8px}
+table{width:100%;border-collapse:collapse;font-size:14px;background:var(--paper)}
+th{background:#eef4f2;text-align:left;font-weight:700;font-size:12.5px;letter-spacing:.04em;color:var(--ink-2);padding:11px 14px;border-bottom:1px solid var(--line-2);white-space:nowrap}
+td{padding:11px 14px;border-bottom:1px solid var(--line);color:var(--ink-2);vertical-align:top}
+tr:last-child td{border-bottom:none}
+td code{font-size:12.5px}
+tbody tr:hover{background:#f7fbfa}
+
+.box{border-radius:8px;padding:16px 20px;margin:20px 0;border:1px solid;font-size:14.5px;line-height:1.8}
+.box .lbl{display:block;font-size:11.5px;font-weight:800;letter-spacing:.12em;margin-bottom:6px}
+.box p{margin:6px 0;color:inherit}
+.box p:first-of-type{margin-top:0}
+.box p:last-child{margin-bottom:0}
+.box ul{margin:8px 0 0 18px;color:inherit}
+.box li::marker{color:currentColor;opacity:.5}
+.tip{background:#e7f1f5;border-color:#c2d8e3;color:#1f4a66}
+.tip .lbl{color:#2c5d7c}
+.warn{background:var(--red-soft);border-color:#eecac5;color:#7d2b25}
+.warn .lbl{color:var(--red)}
+.note{background:var(--amber-soft);border-color:#e8d5ab;color:#6b4c10}
+.note .lbl{color:var(--amber)}
+.ok{background:var(--green-soft);border-color:#c6ddcf;color:#1d4a37}
+.ok .lbl{color:var(--green)}
+
+.step{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:22px 24px 24px;margin:20px 0;box-shadow:0 1px 2px rgba(29,37,35,.03)}
+.step-h{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.step-n{flex:none;width:28px;height:28px;border-radius:50%;background:var(--teal);color:#fff;font-family:var(--mono);font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.step-h h4{margin:0;font-size:16px;color:var(--ink);font-weight:700}
+.step > p:first-of-type{margin-top:0}
+
+.split{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:22px 0}
+.card{border:1px solid var(--line-2);border-radius:10px;padding:20px;background:var(--paper)}
+.card .tag{font-size:11px;font-weight:800;letter-spacing:.1em;color:var(--teal-deep);background:var(--teal-soft);padding:2px 8px;border-radius:3px;display:inline-block;margin-bottom:10px}
+.card h4{margin:0 0 8px;font-size:16px}
+.card p{font-size:14px;margin:6px 0}
+
+.flow{background:var(--paper);border:1px solid var(--line-2);border-radius:10px;padding:20px 22px;margin:20px 0}
+.flow ol{list-style:none;margin:0;counter-reset:f}
+.flow li{counter-increment:f;position:relative;padding:9px 0 9px 38px;border-bottom:1px dashed var(--line);font-size:14.5px;margin:0}
+.flow li:last-child{border-bottom:none}
+.flow li::before{content:counter(f);position:absolute;left:0;top:8px;width:22px;height:22px;border-radius:50%;background:var(--teal-soft);color:var(--teal-deep);font-family:var(--mono);font-size:11.5px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.flow li b{color:var(--ink)}
+
+footer{grid-column:1/-1;border-top:1px solid var(--line);padding:32px 0 0;margin-top:32px;font-size:13px;color:var(--ink-3);line-height:1.9}
+@media(max-width:900px){
+  .wrap{grid-template-columns:1fr;gap:0;padding:0 18px 60px}
+  nav.toc{position:static;display:none}
+  header.hero{padding:40px 0 32px;margin-bottom:32px}
+  .split{grid-template-columns:1fr}
+  h2{font-size:21px}
+}
+@media print{
+  body{background:#fff;font-size:11pt}
+  nav.toc{display:none}
+  .wrap{display:block;max-width:none;padding:0}
+  .step,.box,table,.flow{break-inside:avoid}
+  h2,h3{break-after:avoid}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <span class="eyebrow">硬件折腾 · 刷机指南 · 飞牛篇</span>
+  <h1>麦田云盒 1S Plus 刷飞牛 fnOS
+    <small>同一台机器，换成 NAS 系统。硬件准备和打底步骤跟 Armbian 一样，<br>但从"写盘"开始，全流程都不一样——照着 Armbian 的经验刷会卡住。</small>
+  </h1>
+  <div class="meta">
+    <span><b>目标系统</b> FnNAS（ophub 社区版飞牛 OS）</span>
+    <span><b>镜像</b> fnnas_amlogic_s905x3_*.img.gz</span>
+    <span><b>访问端口</b> 5666</span>
+    <span><b>难度</b> 中等</span>
+  </div>
+</header>
+
+<nav class="toc">
+  <div class="t">目录</div>
+  <a href="#d0">0 · 三个必须先知道的事</a>
+  <a href="#d1">1 · 飞牛能干什么、不能干什么</a>
+  <a href="#d2">2 · 准备清单</a>
+  <a href="#d3">3 · 打底：线刷 ATV</a>
+  <a href="#d4">4 · 写镜像 + 改 uEnv.txt</a>
+  <a href="#d5">5 · U 盘启动、找 IP、网页初始化</a>
+  <a href="#d6">6 · 装进 eMMC</a>
+  <a href="#d7">7 · 分区怎么选（128G 重点）</a>
+  <a href="#d8">8 · 装完做什么</a>
+  <a href="#d9">9 · 故障排查</a>
+  <a href="#d10">10 · Armbian 还是飞牛</a>
+</nav>
+
+<main>
+
+<!-- ============ 0 ============ -->
+<section id="d0">
+  <h2><span class="num">00</span>三个必须先知道的事</h2>
+
+  <p>如果你看过 Armbian 那份教程，请注意这里有三处**完全相反**的地方。这是刷飞牛最常见的翻车点。</p>
+
+  <div class="split">
+    <div class="card">
+      <span class="tag">差异一</span>
+      <h4>不是 root / 1234 登录</h4>
+      <p>Armbian 是控制台 <code>root</code> / <code>1234</code> 登录后跑安装脚本。飞牛是<strong>浏览器打开 <code>IP:5666</code> 创建账号</strong>，再到「系统设置 → SSH」手动开 SSH，才能进终端。</p>
+    </div>
+    <div class="card">
+      <span class="tag">差异二</span>
+      <h4>改的是 uEnv.txt，不是 extlinux.conf</h4>
+      <p>Armbian 改 <code>extlinux/extlinux.conf</code> 的 <code>FDT</code> 行。飞牛改根目录 <code>uEnv.txt</code> 的 <code>fdtfile=</code> 行。改错文件等于没改。</p>
+    </div>
+  </div>
+
+  <div class="box warn">
+    <span class="lbl">差异三 · 最重要</span>
+    <p><strong>飞牛第一次启动时，如果 dtb 不对，网口就不通，拿不到 IP，也就进不了网页。</strong>Armbian 至少有 HDMI 控制台可以登录折腾，飞牛是"网页优先"的系统——所以 <strong>务必在写完之后、插上之前，先把 uEnv.txt 改好</strong>。这一步是整份教程里最不能省的。</p>
+  </div>
+
+  <p>还有一点要说清楚：<strong>飞牛官方 fnOS 只支持 x86</strong>。这里刷的是 ophub 在飞牛官方技术指导下构建的 <strong>ARM64 适配版（FnNAS）</strong>，完整继承官方功能（写入 eMMC、内核在线升级、应用中心），但整体仍带内测性质，功能完整度和稳定性不如 x86 正式版。</p>
+</section>
+
+<!-- ============ 1 ============ -->
+<section id="d1">
+  <h2><span class="num">01</span>飞牛能干什么、不能干什么</h2>
+
+  <p>刷完之后，1S Plus 的 4G 内存 + 128G eMMC 会变成一台低功耗 NAS。实际能跑起来的：</p>
+
+  <div class="tw">
+  <table>
+    <thead><tr><th>能力</th><th>说明</th><th>这台机器的表现</th></tr></thead>
+    <tbody>
+      <tr><td>私有云盘</td><td>SMB / WebDAV / FTP / NFS，手机电脑电视互通</td><td>好用，128G 自带空间 + USB 3.0 外挂硬盘</td></tr>
+      <tr><td>飞牛影视</td><td>自动刮削海报、字幕，界面干净无广告</td><td>能用，但<strong>硬件解码大概率不启用</strong>，高码率 4K 会卡</td></tr>
+      <tr><td>飞牛相册</td><td>人脸识别、智能搜索、支持 iPhone 实况照片</td><td>能用，首次索引 128G 照片会比较久</td></tr>
+      <tr><td>Docker</td><td>qBittorrent、OpenList、AdGuard、Lucky 等</td><td>4G 内存够跑几个轻量容器，别堆太多</td></tr>
+      <tr><td>远程访问</td><td>FN Connect（官方免费版）</td><td>可用，速度一般</td></tr>
+      <tr><td>相册 AI / 人脸</td><td>需要算力</td><td>能跑但慢，S905X3 没有 NPU</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="box note">
+    <span class="lbl">要有心理预期</span>
+    <p>飞牛 ARM 版是内测阶段的产物。已知问题包括：应用中心里部分应用装不上、个别镜像有"无法创建文件夹"的权限 BUG、部分机型硬件解码不启用。<strong>当轻量文件服务器 + 几个小容器很合适，当主力影音 NAS 会失望。</strong></p>
+  </div>
+</section>
+
+<!-- ============ 2 ============ -->
+<section id="d2">
+  <h2><span class="num">02</span>准备清单</h2>
+
+  <p>跟 Armbian 那套基本重合，只换一个固件。</p>
+
+  <div class="tw">
+  <table>
+    <thead><tr><th>物品</th><th>规格</th><th>备注</th></tr></thead>
+    <tbody>
+      <tr><td>Windows 电脑</td><td>Win 10 / 11</td><td>只用它做两件事：线刷打底、写 U 盘</td></tr>
+      <tr><td>双公头 USB 线</td><td>短、粗、带屏蔽</td><td>打底刷 ATV 时用</td></tr>
+      <tr><td>晶晨短接神器</td><td>HDMI 口免拆款</td><td>同上</td></tr>
+      <tr><td>U 盘</td><td>≥ 8GB，建议 16GB</td><td><strong>质量要好</strong>。飞牛写 eMMC 失败，八成是 U 盘的问题</td></tr>
+      <tr><td>网线 + 显示器 + HDMI 线</td><td>—</td><td>网线必接（盒子板没 Wi-Fi）</td></tr>
+      <tr><td>飞牛镜像</td><td><code>fnnas_amlogic_s905x3_*.img.gz</code></td><td><a href="https://github.com/ophub/fnnas/releases" target="_blank" rel="noopener">ophub/fnnas/releases</a>，约 1.7GB</td></tr>
+      <tr><td>ATV 打底固件</td><td><code>sbx_hk1_box_atv_9_12</code></td><td>跟 Armbian 方案共用同一个</td></tr>
+      <tr><td>Rufus / balenaEtcher</td><td>—</td><td>写盘</td></tr>
+      <tr><td>Amlogic USB Burning Tool</td><td>v2.2.0+</td><td>打底用</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="box tip">
+    <span class="lbl">下镜像别下错</span>
+    <p>Releases 里有几十个镜像，一定要找文件名叫 <code>fnnas_amlogic_s905x3_k*.img.gz</code> 的那个（不带任何后缀的通用版）。带 <code>-x88-pro-x3</code> 后缀的是给另一块板子的，dtb 不通用。看到 <code>s905x2</code> / <code>s905l3a</code> / <code>s905w</code> 一律跳过。</p>
+  </div>
+</section>
+
+<!-- ============ 3 ============ -->
+<section id="d3">
+  <h2><span class="num">03</span>打底：线刷 ATV（如果已刷过可跳过）</h2>
+
+  <p>跟 Armbian 方案<strong>完全一样</strong>，作用是换掉原厂 u-boot、解锁 U 盘启动。已经刷过 ATV 的机器直接跳到第 4 节。</p>
+
+  <div class="flow">
+    <ol>
+      <li><b>装工具</b>：安装 USB Burning Tool，Win10/11 报驱动签名错误就先临时禁用签名强制</li>
+      <li><b>导入固件</b>：选择 ATV 的 <code>.img</code>，等待校验完成</li>
+      <li><b>设选项</b>：擦除 flash 勾选 · <strong>擦除 bootloader 不勾</strong> · <strong>覆盖 key 不勾</strong></li>
+      <li><b>进 MaskROM</b>：断电 → 短接神器插 HDMI → 双公头 USB 接盒子 USB2.0 口和电脑（机箱后置）→ 上电</li>
+      <li><b>松短接</b>：工具提示"连接成功"后<strong>立刻拔掉短接神器</strong></li>
+      <li><b>开始烧录</b>：点开始，3–8 分钟到 100%，显示 Success 后停止、拔线、接 HDMI 通电</li>
+    </ol>
+  </div>
+
+  <div class="box ok">
+    <span class="lbl">验证</span>
+    <p>能正常进安卓桌面、遥控器能用、插网线有网——说明打底成功，可以往下走。</p>
+  </div>
+</section>
+
+<!-- ============ 4 ============ -->
+<section id="d4">
+  <h2><span class="num">04</span>写镜像 + 改 uEnv.txt</h2>
+
+  <div class="step">
+    <div class="step-h"><span class="step-n">1</span><h4>下载并写盘</h4></div>
+    <p>下载 <code>fnnas_amlogic_s905x3_k6.12.41_*.img.gz</code>。用 Rufus 选 U 盘 → 选镜像 → 开始。<strong>不需要解压</strong>，Rufus 能直接处理 <code>.gz</code>。</p>
+    <p>写完后 Windows 可能弹「需要格式化」，点<strong>取消</strong>。</p>
+  </div>
+
+  <div class="step">
+    <div class="step-h"><span class="step-n">2</span><h4>改 uEnv.txt（核心一步）</h4></div>
+    <p>U 盘里有个 FAT32 分区，Windows 能直接打开。找到根目录的 <code>uEnv.txt</code>，用记事本打开，定位 <code>fdtfile=</code> 这一行：</p>
+<pre><code><span class="c"># 改之前（默认指向百兆网口机型，网口会不通）</span>
+fdtfile=amlogic/meson-sm1-x96-air.dtb
+
+<span class="c"># 改成这个（4G 内存 + 千兆网口，与 Armbian 方案同一颗 dtb）</span>
+fdtfile=amlogic/meson-sm1-x96-max-plus-oc.dtb</code></pre>
+    <p>保存，安全弹出 U 盘。注意是 <strong><code>amlogic/</code> 开头的相对路径</strong>，不要写成 <code>/dtb/amlogic/...</code>——飞牛的 uEnv.txt 和 Armbian 的 extlinux.conf 路径写法不一样。</p>
+  </div>
+
+  <div class="box warn">
+    <span class="lbl">没有 uEnv.txt 怎么办</span>
+    <p>极少数版本可能用别的引导文件。先 <code>ls</code> 一下 FAT32 分区根目录，看有没有 <code>uEnv.txt</code>、<code>boot.scr</code>、<code>extlinux/</code> 这几个。有 <code>uEnv.txt</code> 就改它；如果只有 <code>extlinux/extlinux.conf</code>，那说明这个镜像沿用了 Armbian 的引导方式，改里面的 <code>FDT</code> 行。</p>
+  </div>
+
+  <div class="box tip">
+    <span class="lbl">进系统后还能再确认</span>
+    <p>如果启动后网口通了但设备名不对、或者某个功能异常，SSH 进去后可以查有哪些 dtb 可选：</p>
+    <pre style="margin:10px 0 0"><code>ls /boot/dtb/amlogic/ | grep sm1</code></pre>
+  </div>
+</section>
+
+<!-- ============ 5 ============ -->
+<section id="d5">
+  <h2><span class="num">05</span>U 盘启动、找 IP、网页初始化</h2>
+
+  <h3>第一步：让它从 U 盘启动</h3>
+  <p>和 Armbian 一样四种方式，优先用第一种：</p>
+  <div class="tw">
+  <table>
+    <thead><tr><th>方式</th><th>操作</th><th>适用</th></tr></thead>
+    <tbody>
+      <tr><td><strong>APK 一键重启</strong></td><td>安卓里装 <code>Reboot to LibreELEC.apk</code>，插 U 盘，点开 App 确认</td><td>推荐，不用拆机</td></tr>
+      <tr><td>复位孔</td><td>断电 → 插 U 盘 → 卡针顶住复位孔 → 上电 → 保持 5 秒</td><td>备用</td></tr>
+      <tr><td>ADB</td><td><code>adb shell reboot update</code></td><td>已开调试</td></tr>
+      <tr><td>拆机短接</td><td>镊子短接 eMMC 数据脚 / SW 焊盘后上电</td><td>兜底</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>第二步：在路由器里找它</h3>
+  <p>飞牛启动后会自动通过 DHCP 拿地址，<strong>主机名是 <code>debian</code></strong>。登录你家路由器后台，在"已连接设备"里找一个叫 <code>debian</code> 的，记下它的 IP。</p>
+
+  <div class="box note">
+    <span class="lbl">这台机器的特殊之处</span>
+    <p>盒子板的网口是<strong>接到机内路由板</strong>的。如果你把盒子直接接在自家路由器上，就从自家路由找 <code>debian</code>；如果是接在麦田云盒的路由板 LAN 口上，就得登路由板后台 <code>192.168.5.1</code> 去看 DHCP 列表。</p>
+  </div>
+
+  <p>找不到 IP 的话，接上 HDMI 看屏幕，启动日志末尾通常会直接打印：</p>
+<pre><code>The FnNAS Web UI can be directly accessed at:
+http://192.168.1.15:5666</code></pre>
+
+  <h3>第三步：网页初始化</h3>
+  <p>浏览器打开 <code>http://你的IP:5666</code>，第一次进来是创建页面：</p>
+  <ul>
+    <li><strong>设备名称</strong>：随便起，比如 <code>MaitianNAS</code></li>
+    <li><strong>超级管理员账号</strong>：英文，比如 <code>admin</code></li>
+    <li><strong>密码</strong>：自己设，<strong>记牢</strong>——后面 SSH 提权要用它</li>
+    <li>勾选同意协议 → 进入飞牛</li>
+  </ul>
+
+  <div class="box ok">
+    <span class="lbl">到这一步已经能用了</span>
+    <p>系统正在 U 盘上运行，网页面板、文件管理、Docker 都能操作。<strong>但此时 eMMC 里还是安卓，拔掉 U 盘就回到安卓。</strong>要固化，继续下一步。</p>
+  </div>
+</section>
+
+<!-- ============ 6 ============ -->
+<section id="d6">
+  <h2><span class="num">06</span>装进 eMMC</h2>
+
+  <div class="step">
+    <div class="step-h"><span class="step-n">1</span><h4>在网页里打开 SSH</h4></div>
+    <p>左侧「系统设置」→「SSH」→ 打开开关。飞牛的 SSH 默认是关的，不开这一步后面连不上。</p>
+  </div>
+
+  <div class="step">
+    <div class="step-h"><span class="step-n">2</span><h4>SSH 连进去提权</h4></div>
+    <p>用 FinalShell / MobaXterm / 系统自带终端都行：</p>
+<pre><code>ssh admin@192.168.1.15      <span class="c"># 换成你的账号和 IP</span>
+<span class="c"># 输入你在网页里设的密码</span>
+
+sudo -i                      <span class="c"># 提权到 root，再输一次密码</span></code></pre>
+  </div>
+
+  <div class="step">
+    <div class="step-h"><span class="step-n">3</span><h4>运行安装脚本</h4></div>
+<pre><code>fnnas-install</code></pre>
+    <p>脚本会列出设备表（ID / SoC / Model / DTB 四列）。在 S905X3 段里按<strong>机型名</strong>找，别记数字，ID 会随版本变：</p>
+    <div class="tw">
+    <table>
+      <thead><tr><th>Model</th><th>DTB</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td>X96-Max+ (OverClock)</td><td><code>meson-sm1-x96-max-plus-oc.dtb</code></td><td><strong>首选</strong>，与 Armbian 方案实测同款</td></tr>
+        <tr><td>X96-Max+</td><td><code>meson-sm1-x96-max-plus.dtb</code></td><td>不超频，更保守</td></tr>
+        <tr><td>HK1-Box (OverClock)</td><td><code>meson-sm1-hk1box-vontar-x3-oc.dtb</code></td><td>备选，与打底 ATV 同源</td></tr>
+        <tr><td>X96-Air / 100Mb</td><td><code>meson-sm1-x96-air.dtb</code></td><td><strong>别选</strong>，百兆网口</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-h"><span class="step-n">4</span><h4>选分区大小，然后等</h4></div>
+    <p>接着会问根分区多大（详见第 7 节）：</p>
+    <ul>
+      <li><code>1</code> — 根分区限制在 <strong>16GiB</strong>，剩余空间留给存储池 ← <strong>128G 机器推荐</strong></li>
+      <li><code>2</code> — 根分区扩展到<strong>整盘</strong>（脚本的默认建议值）</li>
+      <li><code>3</code> — 保留当前分区表（重装时才有，用于保住 P3 数据）</li>
+      <li><code>≥16</code> — 直接输入一个 GiB 数字，比如 <code>32</code></li>
+    </ul>
+    <p>选完脚本开始写 bootloader、重建分区、格式化，输出一路滚到 <code>SUCCESS</code>。约 3–8 分钟。</p>
+  </div>
+
+  <div class="step">
+    <div class="step-h"><span class="step-n">5</span><h4>关机、拔 U 盘、重新上电</h4></div>
+<pre><code>poweroff</code></pre>
+    <p>拔掉 U 盘，重新通电。这次从 eMMC 启动，浏览器再访问同一个 IP（可能变了，重新在路由里找 <code>debian</code> 或看屏幕），<code>:5666</code> 照常进面板。</p>
+  </div>
+
+  <div class="box ok">
+    <span class="lbl">验收</span>
+    <p>SSH 里跑 <code>lsblk</code>，应该看到系统装在 <code>mmcblk*</code>（eMMC）上，而不是 <code>sda</code>（U 盘）。跑 <code>df -h /</code> 看根分区大小跟你选的一致。</p>
+  </div>
+</section>
+
+<!-- ============ 7 ============ -->
+<section id="d7">
+  <h2><span class="num">07</span>分区怎么选（128G 的关键决策）</h2>
+
+  <p>这是整份教程里唯一需要你想清楚的地方。选错了要么系统盘吃满 128G、要么以后想扩系统很麻烦。</p>
+
+  <div class="tw">
+  <table>
+    <thead><tr><th>选法</th><th>结果</th><th>适合谁</th></tr></thead>
+    <tbody>
+      <tr><td><code>1</code>（16GiB）</td><td>系统占 16G，剩下约 105G 可以在飞牛里建成存储空间</td><td><strong>推荐。</strong>纯 NAS 用途，Docker 只跑几个轻量容器</td></tr>
+      <tr><td><code>32</code></td><td>系统占 32G，剩约 90G 做存储</td><td>打算装不少 Docker 镜像（镜像很吃系统盘）</td></tr>
+      <tr><td><code>2</code>（全盘）</td><td>128G 全给系统根分区，没有内置存储空间</td><td>只把 eMMC 当系统盘，数据全靠 USB3.0 外挂硬盘</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="box warn">
+    <span class="lbl">别顺手敲 2</span>
+    <p>脚本把 <code>2</code> 标成默认，是因为它的通用逻辑是"有一块盘就全用上"。但<strong>飞牛是 NAS，数据要单独建存储空间</strong>。选 2 之后你会发现「存储空间管理」里没有可用的内置空间，必须插 U 盘或硬盘才能建存储池——128G eMMC 白白被系统吃掉。</p>
+  </div>
+
+  <h3>建好之后补一步</h3>
+  <p>装完进网页，「存储空间管理」→「创建」，把剩余空间建成存储池（建议单盘 ext4 或 RAID0 不需要的直通模式）。之后文件、相册、影视、Docker 数据都往这里放。</p>
+
+  <div class="box tip">
+    <span class="lbl">如果已经选错</span>
+    <p>重刷 U 盘 → 重走 <code>fnnas-install</code> 即可，选 <code>3</code>（保留分区）或重新选大小都行。eMMC 里的数据会被清掉，所以<strong>装系统时别急着往里存东西</strong>。</p>
+  </div>
+</section>
+
+<!-- ============ 8 ============ -->
+<section id="d8">
+  <h2><span class="num">08</span>装完做什么</h2>
+
+  <h3>创建存储空间</h3>
+  <p>「存储空间管理」→ 创建 → 选剩余空间 → 文件系统 ext4 → 完成。这是后面所有功能的地基。</p>
+
+  <h3>开远程访问</h3>
+  <p>「系统设置 → 远程访问 → FN Connect」，官方基础版免费。在外面用手机也能连回家。</p>
+
+  <h3>装应用（应用中心）</h3>
+  <p>常用组合，按需装：</p>
+  <div class="tw">
+  <table>
+    <thead><tr><th>应用</th><th>用途</th></tr></thead>
+    <tbody>
+      <tr><td>qBittorrent</td><td>BT / PT 下载，挂到存储空间</td></tr>
+      <tr><td>OpenList（原 Alist）</td><td>聚合各家网盘，统一入口</td></tr>
+      <tr><td>AdGuard Home</td><td>全屋去广告 DNS</td></tr>
+      <tr><td>Lucky</td><td>内网穿透 + 反向代理 + 自动证书</td></tr>
+      <tr><td>飞牛影视 / 飞牛相册</td><td>官方套件，刮削和相册管理</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>加虚拟内存</h3>
+  <p>4G 内存跑 Docker 容易吃紧，用 eMMC 换 swap（参数单位 GB）：</p>
+<pre><code>sudo -i
+fnnas-swap 2</code></pre>
+
+  <h3>更新内核</h3>
+<pre><code>sudo -i
+fnnas-update              <span class="c"># 升到最新</span>
+fnnas-update -k 6.12      <span class="c"># 或指定内核系列</span></code></pre>
+  <p>更新会自动备份旧内核到 <code>/ddbr/backup</code>。升完起不来，用 <code>fnnas-update -s</code> 恢复。</p>
+
+  <h3>备份当前系统</h3>
+<pre><code>sudo -i
+fnnas-ddbr                <span class="c"># 输入 b 备份，输入 r 恢复</span></code></pre>
+  <p>调教好之后备份一次，以后折腾坏了直接 r 回来，比重新刷 U 盘快得多。</p>
+
+  <h3>固定 IP</h3>
+  <p>盒子板没 Wi-Fi，IP 靠 DHCP，重启可能变。在自家路由器（或麦田云盒的路由板 <code>192.168.5.1</code>）里做 DHCP 静态绑定，一劳永逸。</p>
+</section>
+
+<!-- ============ 9 ============ -->
+<section id="d9">
+  <h2><span class="num">09</span>故障排查</h2>
+
+  <h3>启动阶段</h3>
+  <div class="tw">
+  <table>
+    <thead><tr><th>现象</th><th>原因</th><th>处理</th></tr></thead>
+    <tbody>
+      <tr><td>屏幕滚日志，但一直不出 IP</td><td>dtb 网口不对，最典型</td><td>重新改 <code>uEnv.txt</code> 的 <code>fdtfile</code>，换 <code>x96-max-plus-oc</code></td></tr>
+      <tr><td>完全不启动，还是进安卓</td><td>没触发 U 盘引导</td><td>换 APK 方式；或复位孔 / 短接</td></tr>
+      <tr><td>黑屏无输出</td><td>dtb 不匹配</td><td>同上，改 dtb 重来</td></tr>
+      <tr><td>日志卡住不动超过 10 分钟</td><td>U 盘质量差 / 写入不完整</td><td>换 U 盘，用 balenaEtcher 重写</td></tr>
+      <tr><td>有 IP 但网页打不开</td><td>端口错 / 不同网段</td><td>确认 <code>:5666</code>；确认电脑和盒子同网段</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>安装到 eMMC 阶段</h3>
+  <div class="tw">
+  <table>
+    <thead><tr><th>现象</th><th>原因</th><th>处理</th></tr></thead>
+    <tbody>
+      <tr><td>SSH 连不上</td><td>没在网页里开 SSH</td><td>「系统设置 → SSH」打开；确认 22 端口通</td></tr>
+      <tr><td><code>sudo -i</code> 提示密码错</td><td>用的是 root 密码</td><td>输你在网页创建的那个<strong>管理员账号的密码</strong></td></tr>
+      <tr><td>写入中途报错</td><td>U 盘读写不稳，最常见</td><td>换 U 盘重来；换 USB 2.0 口更稳</td></tr>
+      <tr><td>报分区表错误</td><td>原厂分区残留</td><td>加参数 <code>fnnas-install -a yes</code> 强制用 ampart 重整</td></tr>
+      <tr><td>装完起不来</td><td>bootloader 写入失败</td><td>加 <code>-m yes</code> 用主线 u-boot 重装一次</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>用起来的问题</h3>
+  <div class="tw">
+  <table>
+    <thead><tr><th>现象</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>播放视频卡顿</td><td>S905X3 在飞牛 ARM 版下硬件解码常常不启用，属已知限制。高码率 4K 建议换设备或用 DLNA 推给电视硬解</td></tr>
+      <tr><td>应用中心里装不上</td><td>内测阶段的应用仓库不完整，可改用 Docker 手动部署</td></tr>
+      <tr><td>无法创建文件夹</td><td>部分镜像的权限 BUG，社区在修。可 <code>chown</code> 手动改属主，或升级到更新的镜像</td></tr>
+      <tr><td>SSH 重启后又关了</td><td>去「系统设置 → SSH」确认是持久开关，不是临时会话</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<!-- ============ 10 ============ -->
+<section id="d10">
+  <h2><span class="num">10</span>Armbian 还是飞牛</h2>
+
+  <p>两个都能刷，硬件准备、打底步骤、dtb 选择完全一样，区别只在"装完之后你面对什么"。</p>
+
+  <div class="tw">
+  <table>
+    <thead><tr><th></th><th>Armbian</th><th>飞牛 FnNAS</th></tr></thead>
+    <tbody>
+      <tr><td><strong>上手门槛</strong></td><td>要会一点命令行</td><td>网页点点就能用</td></tr>
+      <tr><td><strong>装系统的入口</strong></td><td>HDMI 控制台 root/1234</td><td>浏览器 <code>:5666</code> 建账号 → 开 SSH</td></tr>
+      <tr><td><strong>改 dtb 的文件</strong></td><td><code>extlinux/extlinux.conf</code> 的 FDT</td><td><code>uEnv.txt</code> 的 fdtfile</td></tr>
+      <tr><td><strong>文件共享</strong></td><td>自己装 Samba / NFS</td><td>内置，开箱可用</td></tr>
+      <tr><td><strong>影视刮削</strong></td><td>装 Jellyfin / Emby</td><td>内置飞牛影视</td></tr>
+      <tr><td><strong>相册</strong></td><td>装 Immich 等</td><td>内置飞牛相册</td></tr>
+      <tr><td><strong>稳定性</strong></td><td>成熟，社区跑了很久</td><td>内测阶段，偶有 BUG</td></tr>
+      <tr><td><strong>可定制性</strong></td><td>极高，想怎么改怎么改</td><td>受限于官方框架</td></tr>
+      <tr><td><strong>适合</strong></td><td>想学 Linux、要跑自定义服务</td><td>只想有个好用的家用 NAS</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="box tip">
+    <span class="lbl">两个都要？</span>
+    <p>可以。U 盘就是个"移动系统"，eMMC 里装飞牛，U 盘里放 Armbian，想换的时候改启动顺序即可——不用重刷 eMMC。这是盒子类设备最好玩的地方。</p>
+  </div>
+
+  <h3>一句话流程</h3>
+  <p style="font-size:15.5px;line-height:2;color:var(--ink)">
+    线刷 ATV 打底 → 写 fnnas 镜像到 U 盘并改 <code>uEnv.txt</code> 的 fdtfile →<br>
+    APK 重启进 U 盘 → 浏览器 <code>IP:5666</code> 建账号 → 开 SSH → <code>sudo -i</code> → <code>fnnas-install</code> →<br>
+    选 <code>x96-max-plus-oc</code> + 分区 16GiB → <code>poweroff</code> 拔盘重启 → 建存储空间。
+  </p>
+</section>
+
+</main>
+
+<footer>
+  <p><strong>资料来源</strong>：OPHUB <code>fnnas</code> 项目官方 README（支持设备列表、<code>fnnas-install</code> / <code>fnnas-update</code> / <code>fnnas-ddbr</code> 参数、5666 端口与分区选项说明）；飞牛 ARM 版刷机实操文章（Web 初始化 → 开 SSH → 装 eMMC 流程、<code>uEnv.txt</code> / <code>fdtfile</code> 修改方法）；恩山论坛《麦田云盒 1s plus 刷 armbian》实测帖（S905X3 4+128 的 dtb 适配结论）。</p>
+  <p style="margin-top:10px">飞牛 ARM 版由社区维护、官方技术指导，仍带内测性质。硬件批次与镜像版本存在差异，操作前请核对实际配置。刷机风险自负。</p>
+</footer>
+
+</div>
+</body>
+</html>
